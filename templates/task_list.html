@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+</head>
+<body>
+    <h1>Your Tasks</h1>
+    <a href="{% url 'task-form' %}">Create New Task</a>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <strong>{{ task.title }}</strong><br>
+                <p>{{ task.description }}</p>
+                <p>Completed: {{ task.completed|yesno:"Yes,No" }}</p>
+                <a href="{% url 'task-form-edit' task.id %}">Edit</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

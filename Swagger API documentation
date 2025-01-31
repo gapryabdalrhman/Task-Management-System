@@ -1,0 +1,217 @@
+swagger: '2.0'
+info:
+  title: Task Manager API
+  description: API for managing tasks
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: contact@taskmanager.local
+  license:
+    name: BSD License
+  version: v1
+host: 127.0.0.1:8000
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /tasks/:
+    get:
+      operationId: tasks_list
+      description: API endpoint for managing tasks (JWT Authentication Required)
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Task'
+      tags:
+      - tasks
+    post:
+      operationId: tasks_create
+      description: API endpoint for managing tasks (JWT Authentication Required)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Task'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Task'
+      tags:
+      - tasks
+    parameters: []
+  /tasks/{id}/:
+    get:
+      operationId: tasks_read
+      description: API endpoint for managing tasks (JWT Authentication Required)
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Task'
+      tags:
+      - tasks
+    put:
+      operationId: tasks_update
+      description: API endpoint for managing tasks (JWT Authentication Required)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Task'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Task'
+      tags:
+      - tasks
+    patch:
+      operationId: tasks_partial_update
+      description: API endpoint for managing tasks (JWT Authentication Required)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Task'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Task'
+      tags:
+      - tasks
+    delete:
+      operationId: tasks_delete
+      description: API endpoint for managing tasks (JWT Authentication Required)
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - tasks
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenObtainPair'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenObtainPair'
+      tags:
+      - token
+    parameters: []
+  /token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenRefresh'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenRefresh'
+      tags:
+      - token
+    parameters: []
+definitions:
+  Task:
+    required:
+    - title
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      title:
+        title: Title
+        type: string
+        maxLength: 255
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        x-nullable: true
+      completed:
+        title: Completed
+        type: boolean
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+  TokenObtainPair:
+    required:
+    - username
+    - password
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  TokenRefresh:
+    required:
+    - refresh
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
